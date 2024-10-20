@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <title>OpenAI API Demo</title>
+  </head>
+  <body>
+    <h1>OpenAI API Demo</h1>
+    <label for="prompt">Ask a question:</label>
+    <input type="text" id="prompt" name="prompt">
+    <button onclick="generateResponse()">Get answer</button>
+    <div id="response"></div>
+    <script>
+      function generateResponse() {
+        const apiKey = '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';
+        const prompt = document.getElementById('prompt').value;
+        const endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-  <link rel="stylesheet" href="style.css">
-  <title>AI</title>
-</head>
-
-<body>
-  <button id="chat-toggle"><i class="far fa-comment"></i></button>
-  <div id="chat-widget">
-    <div id="chat-container">
-      <div id="chat-title">Chat Title</div>
-      <div id="chat-messages"></div>
-      <div id="chat-input-container">
-        <input id="chat-input" type="text" placeholder="Write your message">
-        <button id="chat-send">Send</button>
-        <div id="loading">
-          <div class="spinner"></div>
-          <div class="message">Loading...</div>
-        </div>        
-      </div>
-    </div>
-  </div>
-  
-
-  <script src="/script.js"></script>
-</body>
-
+        fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            'prompt': prompt,
+            'max_tokens': 5
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          const responseElement = document.getElementById('response');
+          responseElement.innerText = data.choices[0].text;
+        })
+        .catch(error => console.error(error));
+      }
+    </script>
+  </body>
 </html>
